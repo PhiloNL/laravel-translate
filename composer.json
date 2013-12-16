@@ -1,5 +1,5 @@
 {
-    "name": "philo/translate",
+    "name": "philo/laravel-translate",
     "description": "Translation manager for Laravel 4",
     "keywords": ["laravel", "translate", "translation", "manager"],
     "license": "MIT",
