@@ -16,16 +16,16 @@ To add a new translation you need to open your terminal, and run the following c
 So for a example:  
 `php artisan translate:add account upgrade`
 
-<img src="http://d.pr/i/jQmr+">
+<img src="http://s30.postimg.org/ilqog05lt/Screen_Shot_2013_12_16_at_01_23_08.png">
 
 As you can see, you will get the blade syntax returned so you can copy and paste it to your view. Adding variables to your string will result in a different syntax:  
 `php artisan translate:add account welcome`
 
-<img src="http://d.pr/i/AWXe+">
+<img src="http://postimg.org/image/aps91qf5r/">
 
 Translation files are dynamically generated in alphabetical order and equally spaced.
 
-<img src="http://d.pr/i/9ZaS+">
+<img src="http://s22.postimg.org/cdwderlpd/Screen_Shot_2013_12_16_at_01_30_50.png">
 
 ### Removing translations
 
@@ -33,14 +33,14 @@ To remove translations you can use the remove command which has the same syntax 
 
 `php artisan translate:remove account upgrade`
 
-<img src="http://d.pr/i/2EVm+">
+<img src="http://s22.postimg.org/ojq62wpsx/Screen_Shot.png">
 
 ### Clean up
 The clean up command will search your files for language strings which are no longer used.
 
 `php artisan translate:clean-up`
 
-<img src="http://d.pr/i/sJ3M+">
+<img src="http://s27.postimg.org/5og9mmibn/Screen_Shot_2013_12_16_at_12_02_54.png">
 
 Foreach line that was not found, you will get a confirmation if you want to delete the line in question.
 
