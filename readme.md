@@ -21,7 +21,7 @@ So for a example:
 As you can see, you will get the blade syntax returned so you can copy and paste it to your view. Adding variables to your string will result in a different syntax:  
 `php artisan translate:add account welcome`
 
-<img src="http://postimg.org/image/aps91qf5r/">
+<img src="http://s27.postimg.org/kn39usmrn/Screen_Shot_2013_12_16_at_01_25_10.png">
 
 Translation files are dynamically generated in alphabetical order and equally spaced.
 
