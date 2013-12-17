@@ -13,7 +13,7 @@ class CleanUpCommand extends Command {
 	 *
 	 * @var string
 	 */
-	protected $name = 'translate:clean-up';
+	protected $name = 'translate:cleanup';
 
 	/**
 	 * The console command description.
