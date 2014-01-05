@@ -75,7 +75,7 @@ class CleanUpCommand extends Command {
 
 	protected function processGroup($group, $lines)
 	{
-		if(empty($lines) || is_string($lines)) continue;
+		if(empty($lines) || is_string($lines)) return ;
 		array_set($this->missing, $group, array());
 
 		$this->line("Processing $group group...");
