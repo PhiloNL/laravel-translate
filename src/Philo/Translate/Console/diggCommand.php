@@ -57,7 +57,7 @@ class diggCommand extends Command {
 						if(is_null($translation = $this->ask("Translate '{$translate['lang_query']}' {$translate['parameters']} in " . strtoupper($language) . ": "))) continue;
 
 						if(trim($translation)!='') {
-							$this->manager->setLanguage($language)->addLine($translate['group'], $translate['line'], $translation);
+							$this->manager->setLanguage($language)->addLine($translate['group'], $translate['line'], addslashes($translation));
 						}
 					}
 				}
