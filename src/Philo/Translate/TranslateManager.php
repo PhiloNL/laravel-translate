@@ -8,22 +8,13 @@ class TranslateManager {
 	protected $language;
 	protected $languages 		= array();
 	protected $loaded    		= array();
-	private $loadGroupBuffer    = true;
-
+	
 	public function __construct()
 	{
 		$this->getLanguages();
 	}
 
-	/**
-	 * Disable gourp load buffering. This is neaded when digging!
-	 * @param string $abbreviation
-	 */
-	public function disableLoadGroupBuffer()
-	{
-		$this->loadGroupBuffer = false;
-	}
-
+	
 	/**
 	 * Add language to current instance
 	 * @param string $abbreviation
@@ -130,15 +121,9 @@ class TranslateManager {
 	 */
 	protected function loadGroup($group)
 	{	
-		if($this->loadGroupBuffer) {
-			if($loaded = array_get($this->loaded, $this->language . "." . $group)) return $loaded;
-		}
-		
+		if($loaded = array_get($this->loaded, $this->language . "." . $group)) return $loaded;
 		$lines = (Lang::has($group)) ? Lang::get($group) : array();
-		
-		if($this->loadGroupBuffer) {
-			array_set($this->loaded, $this->language . "." . $group, $lines);
-		}
+		array_set($this->loaded, $this->language . "." . $group, $lines);
 
 		return $lines;
 	}
@@ -151,10 +136,19 @@ class TranslateManager {
 	 */
 	protected function writeToFile($group, $lines)
 	{
+
+		//	Store this so we get updated values
+		array_set($this->loaded, $this->language . "." . $group, $lines);
+
+		//	Add slashes to array values
+		array_walk_recursive($lines, function (&$item) {
+			$item = addslashes($item);
+		});
+
 		$date    = Carbon::now()->format('d-m-Y H:i');
 		$string = "<?php\n\n# modified at $date \n\nreturn ".$this->prettyPrintArray($lines)."\n";
 
-		return file_put_contents($this->getFilePath($group), $string );
+		return \File::put($this->getFilePath($group), $string );
 	}
 
 	/**

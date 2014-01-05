@@ -34,7 +34,6 @@ class diggCommand extends Command {
 	{
 		parent::__construct();
 		$this->manager  = $manager;
-		$this->manager->disableLoadGroupBuffer();
 	}
 
 	/**
@@ -56,7 +55,7 @@ class diggCommand extends Command {
 
 					if(\Lang::get($translate['lang_query'], $translate['parameters']) == $translate['lang_query']) {
 						if(is_null($translation = $this->ask("Translate '{$translate['lang_query']}'".(!empty($translate['parameters']) ? " [".implode(',', $translate['parameters']) : ''."]")." in " . strtoupper($language) . ": "))) continue;
-						$this->manager->setLanguage($language)->addLine($translate['group'], $translate['line'], addslashes($translation));
+						$this->manager->setLanguage($language)->addLine($translate['group'], $translate['line'], $translation);
 					}
 				}
 			}
