@@ -176,7 +176,7 @@ class TranslateManager {
 			$longest = $minLongest;
 
 		//	Spacing after language key
-		$spacing = str_repeat('', 2);
+		$spacing = str_repeat(' ', 1);
 
 		$indent = str_repeat("\t", $recursionLevel);
 		$post_indent = str_repeat("\t", ($recursionLevel-1));
