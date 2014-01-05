@@ -53,8 +53,9 @@ class diggCommand extends Command {
 			foreach ($this->getTranlations($file) as $translate) {
 				foreach($this->manager->getLanguages() as $language) {
 					$this->manager->setLanguage($language);
-					if(\Lang::get($translate['lang_query']) == $translate['lang_query']) {
-						if(is_null($translation = $this->ask("Translate '{$translate['lang_query']}' {$translate['parameters']} in " . strtoupper($language) . ": "))) continue;
+
+					if(\Lang::get($translate['lang_query'], $translate['parameters']) == $translate['lang_query']) {
+						if(is_null($translation = $this->ask("Translate '{$translate['lang_query']}'".(!empty($translate['parameters']) ? " [".implode(',', $translate['parameters']) : ''."]")." in " . strtoupper($language) . ": "))) continue;
 
 						if(trim($translation)!='') {
 							$this->manager->setLanguage($language)->addLine($translate['group'], $translate['line'], addslashes($translation));
@@ -90,16 +91,19 @@ class diggCommand extends Command {
 		//	clean up
 		foreach ($files as &$item) {
 
-			//	separate parameters path
+			//	Set parameters [], if we have parameters on our translatios, fill it up next
+			$parameters = [];
+
+			//	separate parameters path from parameters
 			preg_match('/,\s*\t*(\[.*\])/i', $item, $parts);
 			if(!empty($parts)) {
 				$item = str_replace($parts[0], '', $item);
-				$parameters = $parts[1];
+				$_parameters = $parts[1];
+				preg_match_all('/("|\')([^\'"]*)("|\')\s*\t*\n*\r*=\s*>/iU', $_parameters, $keys);
+				if(empty($keys[2])) {
+					$parameters = array_fill_keys($keys[2], 'val');
+				}
 			}
-			else {
-				$parameters = '';
-			}
-			
 			
 			$_i = trim(str_replace(['\'', '"'], '', $item));
 			$item = [
