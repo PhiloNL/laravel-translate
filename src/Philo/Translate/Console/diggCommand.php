@@ -50,6 +50,11 @@ class diggCommand extends Command {
 			$this->comment("Digging translations for '".str_replace(base_path().'/', '', $file)."'");
 
 			foreach ($this->getTranlations($file) as $translate) {
+				
+				if(!$translate['valid'] and !$this->confirm('Translation "'.$translate['lang_query'].'" seems wrong. Want to try to translate it anyway? [yes|no]')) {
+					continue;
+				}
+
 				foreach($this->manager->getLanguages() as $language) {
 					$this->manager->setLanguage($language);
 
@@ -102,8 +107,10 @@ class diggCommand extends Command {
 			}
 			
 			$_i = trim(str_replace(['\'', '"'], '', $item));
+			
 			$item = [
 				'lang_query'	=> $_i,
+				'valid'			=> (preg_match('/[^0-9a-zA-Z\._]/', $_i) == 0),
 				'group' 		=> substr($_i, 0, strpos($_i, '.')),
 				'line' 			=> substr($_i, strpos($_i, '.')+1),
 				'parameters' 	=> $parameters,
