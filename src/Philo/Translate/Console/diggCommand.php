@@ -68,9 +68,9 @@ class diggCommand extends Command {
 	}
 
 	/**
-	 * undocumented function
+	 * Parse all translations from files
 	 *
-	 * @return void
+	 * @return array
 	 * @author 
 	 **/
 	public function getTranlations($file)
