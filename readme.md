@@ -17,17 +17,17 @@ To add a new translation you need to open your terminal, and run the following c
 So for a example:
 `php artisan translate:add profile first_name`
 
-![1](https://f.cloud.github.com/assets/1133950/1894421/39eba7fe-7ae8-11e3-92c9-2a10957bc59f.png)
+![1](https://f.cloud.github.com/assets/1133950/1894668/f3c1f81e-7af6-11e3-8fe2-65f816b4b9f1.png)
 
 As you can see, you will get the blade syntax returned so you can copy and paste it to your view. Adding variables to your string will result in a different syntax:
 `php artisan translate:add profile texts.introduction`
 
-![2](https://f.cloud.github.com/assets/1133950/1894422/49722ffe-7ae8-11e3-8f54-2f69a26a525e.png)
+![2](https://f.cloud.github.com/assets/1133950/1894669/18130ece-7af7-11e3-86a6-86ce9bfad988.png)
 
 
 Translation files are dynamically generated in alphabetical order and equally spaced.
 
-![3](https://f.cloud.github.com/assets/1133950/1894423/510273fa-7ae8-11e3-8c16-6cac35b435d5.png)
+![3](https://f.cloud.github.com/assets/1133950/1894670/1d4edcb0-7af7-11e3-90dd-9d9bb78085d7.png)
 
 
 ### Removing translations
@@ -36,7 +36,7 @@ To remove translations you can use the remove command which has the same syntax 
 
 `php artisan translate:remove account upgrade`
 
-![4](https://f.cloud.github.com/assets/1133950/1894429/ccb29bc4-7ae8-11e3-9c77-06a53b525028.png)
+![4](https://f.cloud.github.com/assets/1133950/1894671/23d94a34-7af7-11e3-9e49-ae0a4f65fe2a.png)
 
 
 ### Clean up
@@ -44,7 +44,7 @@ The clean up command will search your files for language strings which are no lo
 
 `php artisan translate:cleanup`
 
-![5](https://f.cloud.github.com/assets/1133950/1894656/6a5aa8c8-7af6-11e3-8b38-2cffffc32e0a.png)
+![5](https://f.cloud.github.com/assets/1133950/1894672/291f1802-7af7-11e3-83c1-4e20595546a7.png)
 
 
 Foreach line that was not found, you will get a confirmation if you want to delete the line in question.
