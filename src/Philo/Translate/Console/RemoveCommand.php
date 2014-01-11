@@ -59,7 +59,7 @@ class RemoveCommand extends Command {
 		$line  = $this->input->getArgument('line');
 
 		$this->manager->removeLine($group, $line);
-		$this->info("$group.$line has been removed!");
+		$this->info("Translation '$group.$line' has been removed.");
 	}
 
 

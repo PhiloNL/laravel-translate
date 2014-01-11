@@ -63,8 +63,7 @@ class CleanUpCommand extends Command {
 	{
 		$this->progress = $this->getHelperSet()->get('progress');
 
-		$this->info('Time to clean!');
-		$this->comment("Please note that this make take a while depending on the amount of translations...\n");
+		$this->info("Looking for missing translations...\n");
 
 		if(is_null($files = $this->manager->getLanguageFiles()))
 		{
@@ -127,7 +126,7 @@ class CleanUpCommand extends Command {
 		{
 			foreach($missing as $m)
 			{
-				if( $this->input->getOption('silent') OR $confirm = $this->confirm("Remove $group.$m ?"))
+				if( $this->input->getOption('silent') OR $confirm = $this->confirm("$group.$m is missing. Remove? [yes/no]"))
 				{
 					$this->manager->removeLine($group, $m);
 					$this->info("Removed $m from $group");
