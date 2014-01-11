@@ -37,7 +37,7 @@ class TranslateManager {
 		$directories = App::make('Finder')->directories()->in(app_path('lang'));
 
 		// Since we always want the default language to be processed first
-		// we add it manually so it will be ignored when looing through all languages
+		// we add it manually so it will be ignored when looping through all languages
 		$this->addLanguage(App::getLocale());
 
 		foreach ($directories as $directory) {
@@ -71,6 +71,8 @@ class TranslateManager {
 
 		array_set($lines, $line, $translation);
 		$this->writeToFile($group, $lines);
+
+		return $this;
 	}
 
 	/**
@@ -89,6 +91,8 @@ class TranslateManager {
 			array_forget($this->loaded, "$language.$group.$line");
 			$this->writeToFile($group, array_get($this->loaded, "$language.$group", array()));
 		}
+
+		return $this;
 	}
 
 	/**
@@ -110,7 +114,7 @@ class TranslateManager {
 	 */
 	public function findLineCount($group, $line)
 	{
-		return  App::make('Finder')->files()->name('*.php')->in(app_path())->exclude($this->getIgnoredFolders())->contains("$group.$line")->count();
+		return App::make('Finder')->files()->name('*.php')->in(app_path())->exclude($this->getIgnoredFolders())->contains("$group.$line")->count();
 	}
 
 	/**
@@ -181,11 +185,10 @@ class TranslateManager {
 	 */
 	protected function writeToFile($group, $lines)
 	{
-
-		//	Store this so we get updated values
+		// Store this so we get updated values
 		array_set($this->loaded, $this->language . "." . $group, $lines);
 
-		//	Add slashes to array values
+		// Add slashes to array values
 		array_walk_recursive($lines, function (&$item) {
 			$item = addslashes($item);
 		});
@@ -203,25 +206,26 @@ class TranslateManager {
 	 */
 	protected function prettyPrintArray($lines, $recursionLevel = 1, $minLongest = 0)
 	{
-		//	Pretty Print String
+		// Pretty Print String
 		$string = "\n";
 
-		//	Determine longest array key
+		// Determine longest array key
 		$longest = $this->longestLine(array_keys($lines));
 
-		//	If our parent is longer than current, use parent as minimum
+		// If our parent is longer than current, use parent as minimum
 		if($longest < $minLongest)
 			$longest = $minLongest;
 
-		//	Spacing after language key
+		// Spacing after language key
 		$spacing = str_repeat(' ', 1);
 
 		$indent = str_repeat("\t", $recursionLevel);
 		$post_indent = str_repeat("\t", ($recursionLevel-1));
 
-		//	Sort by key, to make even more pretty!
+		// Sort by key, to make even more pretty!
 		ksort($lines);
-		foreach($lines as $line => $translation){
+		foreach($lines as $line => $translation)
+		{
 			if(is_array($translation))
 			{
 				$value = $this->prettyPrintArray($translation, ($recursionLevel+1), $longest);
@@ -230,6 +234,7 @@ class TranslateManager {
 			{
 				$value = "'$translation'";
 			}
+
 			$spaces = (($diff = $longest - strlen($line)) > 0) ? str_repeat(" ", $diff) : '';
 			$string .= $indent."'{$line}'{$spaces}{$spacing}=>{$spacing}{$value},\n";
 		}
