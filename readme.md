@@ -90,4 +90,3 @@ return array(
 
 #### Notes
 When you start using the translation manager you need to make sure that all your translation files are in sync.
-The translation manager does not work with language files that contain multidimensional arrays.
