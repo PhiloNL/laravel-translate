@@ -6,14 +6,15 @@ use App, Config, Lang, Carbon\Carbon;
 class TranslateManager {
 
 	protected $language;
-	protected $languages = array();
-	protected $loaded    = array();
-
+	protected $languages 		= array();
+	protected $loaded    		= array();
+	
 	public function __construct()
 	{
 		$this->getLanguages();
 	}
 
+	
 	/**
 	 * Add language to current instance
 	 * @param string $abbreviation
@@ -119,7 +120,7 @@ class TranslateManager {
 	 * @return array
 	 */
 	protected function loadGroup($group)
-	{
+	{	
 		if($loaded = array_get($this->loaded, $this->language . "." . $group)) return $loaded;
 		$lines = (Lang::has($group)) ? Lang::get($group) : array();
 		array_set($this->loaded, $this->language . "." . $group, $lines);
@@ -135,7 +136,19 @@ class TranslateManager {
 	 */
 	protected function writeToFile($group, $lines)
 	{
-		return file_put_contents($this->getFilePath($group), $this->arrayToString($lines));
+
+		//	Store this so we get updated values
+		array_set($this->loaded, $this->language . "." . $group, $lines);
+
+		//	Add slashes to array values
+		array_walk_recursive($lines, function (&$item) {
+			$item = addslashes($item);
+		});
+
+		$date    = Carbon::now()->format('d-m-Y H:i');
+		$string = "<?php\n\n# modified at $date \n\nreturn ".$this->prettyPrintArray($lines)."\n";
+
+		return \File::put($this->getFilePath($group), $string );
 	}
 
 	/**
@@ -143,19 +156,39 @@ class TranslateManager {
 	 * @param  array $lines
 	 * @return string
 	 */
-	protected function arrayToString($lines)
+	protected function prettyPrintArray($lines, $recursionLevel=1, $minLongest=0)
 	{
-		$date    = Carbon::now()->format('d-m-Y H:i');
-		$string  = "<?php # modified at $date \nreturn array(\n";
-		$longest = $this->longestLine($lines);
-		$spacing = str_repeat(" ", 10);
+
+		//	Pretty Print String
+		$string = "\n";
+
+		//	Determine longest array key
+		$longest = $this->longestLine(array_keys($lines));
+
+		//	If our parent is longer than current, use parent as minimum
+		if($longest<$minLongest)
+			$longest = $minLongest;
+
+		//	Spacing after language key
+		$spacing = str_repeat(' ', 1);
+
+		$indent = str_repeat("\t", $recursionLevel);
+		$post_indent = str_repeat("\t", ($recursionLevel-1));
+
+		//	Sort by key, to make even more pretty!
 		ksort($lines);
 		foreach($lines as $line => $translation){
+			if(is_array($translation)) {
+				$value = $this->prettyPrintArray($translation, ($recursionLevel+1), $longest);
+			}
+			else {
+				$value = "'$translation'";
+			}
 			$spaces = (($diff = $longest - strlen($line)) > 0) ? str_repeat(" ", $diff) : '';
-			$string .= "\t'$line'$spaces $spacing => $spacing '$translation',\n";
+			$string .= $indent."'{$line}'{$spaces}{$spacing}=>{$spacing}{$value},\n";
 		}
-		$string .= ");";
-		return $string;
+
+		return " array({$string}{$post_indent})".($recursionLevel==1 ? ';' : '');
 	}
 
 	/**
@@ -207,6 +240,15 @@ class TranslateManager {
 	}
 
 	/**
+	 * Get folders that need to be ignored
+	 * @return array
+	 */
+	protected function getDiggFolders()
+	{
+		return Config::get('translate::digg_folders');
+	}
+
+	/**
 	 * Return all files within a language
 	 * @return array
 	 */
@@ -222,6 +264,27 @@ class TranslateManager {
 			if(in_array($group, $ignore)) continue;
 			array_set($files, $group, Lang::get($group));
 		}
+
+		return $files;
+	}
+
+	/**
+	 * Return all files to be digged
+	 * @return array
+	 */
+	public function getDiggFiles()
+	{
+		$files   = array();
+		
+		foreach ($this->getDiggFolders() as $folder) {
+			$results = App::make('Finder')->files()->name('*.php')->in(base_path().'/'.$folder);
+			
+			foreach($results as $result)
+			{
+				array_push($files, $result->getRealPath());
+			}
+		}
+		
 
 		return $files;
 	}

@@ -36,6 +36,7 @@ class TranslateServiceProvider extends ServiceProvider {
 		$this->registerAddCommand();
 		$this->registerRemoveCommand();
 		$this->registerCleanUpCommand();
+		$this->registerDiggCommand();
 	}
 
 	/**
@@ -81,6 +82,21 @@ class TranslateServiceProvider extends ServiceProvider {
 		});
 
 		$this->commands('command.translate.cleanup');
+	}
+
+	/**
+	 * Register the digg console command.
+	 *
+	 * @return void
+	 */
+	protected function registerDiggCommand()
+	{
+		$this->app->bind('command.translate.digg', function($app)
+		{
+			return $app->make('Philo\Translate\Console\DiggCommand');
+		});
+
+		$this->commands('command.translate.digg');
 	}
 
 	/**
