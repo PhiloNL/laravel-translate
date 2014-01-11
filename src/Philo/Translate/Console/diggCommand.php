@@ -5,8 +5,9 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 
 use Philo\Translate\TranslateManager;
+use File, Lang;
 
-class diggCommand extends Command {
+class DiggCommand extends Command {
 
 	/**
 	 * The console command name.
@@ -20,9 +21,27 @@ class diggCommand extends Command {
 	 *
 	 * @var string
 	 */
-	protected $description = 'Try to digg all missing translation from application';
+	protected $description = 'Try to digg all missing translation from application [BETA]';
 
+	/**
+	 * The translation manager
+	 *
+	 * @var Philo\Translate\TranslateManager
+	 */
+	protected $manager;
+
+	/**
+	 * The progress helper helper set.
+	 *
+	 * @var \Symfony\Component\Console\Helper\ProgressHelper
+	 */
 	protected $progress;
+
+	/**
+	 * Array containing missing translations
+	 *
+	 * @var array
+	 */
 	protected $missing = array();
 
 	/**
@@ -43,24 +62,30 @@ class diggCommand extends Command {
 	 */
 	public function fire()
 	{
-		$this->info('It\'s time to DIGG for some translations!');
+		$this->info("It's time to DIGG for some translations!");
 		$this->info(' ');
 		foreach ($this->manager->getDiggFiles() as $file) {
-			
-			$this->comment("Digging translations for '".str_replace(base_path().'/', '', $file)."'");
+
+			$path = str_replace(base_path().'/', '', $file);
+			$this->comment("Digging translations for $path");
 
 			foreach ($this->getTranlations($file) as $translate) {
-				
-				if(!$translate['valid'] and !$this->confirm('Translation "'.$translate['lang_query'].'" seems wrong. Want to try to translate it anyway? [yes|no]')) {
+
+				if( ! $translate['valid'] and ! $this->confirm('Translation "' . $translate['lang_query'] . '" seems wrong. Want to try to translate it anyway? [yes|no]')) {
 					continue;
 				}
 
-				foreach($this->manager->getLanguages() as $language) {
-					$this->manager->setLanguage($language);
+				foreach($this->manager->getLanguages() as $language)
+				{
+					$lang_query = array_get($translate, 'lang_query');
+					$parameters = array_get($translate, 'parameters');
+					$group      = array_get($translate, 'group');
+					$line       = array_get($translate, 'line');
 
-					if(\Lang::get($translate['lang_query'], $translate['parameters']) == $translate['lang_query']) {
-						if(is_null($translation = $this->ask("Translate '{$translate['lang_query']}'".(!empty($translate['parameters']) ? " [".implode(',', $translate['parameters']) : ''."]")." in " . strtoupper($language) . ": "))) continue;
-						$this->manager->setLanguage($language)->addLine($translate['group'], $translate['line'], $translation);
+					if(Lang::get($lang_query, $parameters) == $lang_query)
+					{
+						if(is_null($translation = $this->ask("Translate '$lang_query'" . ( ! empty($parameters) ? " [" . implode(',', $parameters) . "]" : null) . " in " . strtoupper($language) . ": "))) continue;
+						$this->manager->setLanguage($language)->addLine($group, $line, $translation);
 					}
 				}
 			}
@@ -71,23 +96,22 @@ class diggCommand extends Command {
 	 * Parse all translations from files
 	 *
 	 * @return array
-	 * @author 
+	 * @author
 	 **/
 	public function getTranlations($file)
 	{
-		$data = \File::get($file);
+		$data = File::get($file);
 
-		
-		//	Try to pick up all Lang funktions from file
-		preg_match_all('/Lang::get\(([^\)]*)\)/iU', $data, $matches, PREG_PATTERN_ORDER);
-		
+		//	Try to pick up all Lang functions from file
+		preg_match_all('/(trans|Lang::get)\(([^\)]*)\)/imU', $data, $matches, PREG_PATTERN_ORDER);
+
 		//	return empty array if none found
-		if(empty($matches[1])) {
+		if(empty($matches[2])) {
 			return array();
 		}
-			
+
 		//	return unique translations
-		$files = array_unique($matches[1]);
+		$files = array_unique($matches[2]);
 
 		//	clean up
 		foreach ($files as &$item) {
@@ -97,17 +121,20 @@ class diggCommand extends Command {
 
 			//	separate parameters path from parameters
 			preg_match('/,\s*\t*(\[.*\])/i', $item, $parts);
-			if(!empty($parts)) {
-				$item = str_replace($parts[0], '', $item);
+			if( ! empty($parts)) {
+
+				$item        = str_replace($parts[0], '', $item);
 				$_parameters = $parts[1];
+
 				preg_match_all('/("|\')([^\'"]*)("|\')\s*\t*\n*\r*=\s*>/iU', $_parameters, $keys);
+
 				if(empty($keys[2])) {
 					$parameters = array_fill_keys($keys[2], 'val');
 				}
 			}
-			
+
 			$_i = trim(str_replace(['\'', '"'], '', $item));
-			
+
 			$item = [
 				'lang_query'	=> $_i,
 				'valid'			=> (preg_match('/[^0-9a-zA-Z\._]/', $_i) == 0),
@@ -116,8 +143,7 @@ class diggCommand extends Command {
 				'parameters' 	=> $parameters,
 			];
 		}
-		
-		
+
 		return $files;
 	}
 

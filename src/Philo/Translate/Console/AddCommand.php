@@ -23,12 +23,11 @@ class AddCommand extends Command {
 	protected $description = 'Add new translation';
 
 	/**
-	 * The translate manager
+	 * The translation manager
 	 *
 	 * @var Philo\Translate\TranslateManager
 	 */
 	protected $manager;
-
 
 	/**
 	 * Return example usages
@@ -62,6 +61,7 @@ class AddCommand extends Command {
 		foreach($this->manager->getLanguages() as $language)
 		{
 			if(is_null($translation = $this->ask("Translate '$line' in " . strtoupper($language) . ": "))) continue;
+
 			$this->manager->setLanguage($language)->addLine($group, $line, $translation);
 			$this->createExample($group, $line, $translation);
 		}

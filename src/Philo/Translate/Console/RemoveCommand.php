@@ -29,7 +29,6 @@ class RemoveCommand extends Command {
 	 */
 	protected $manager;
 
-
 	/**
 	 * Return example usages
 	 *

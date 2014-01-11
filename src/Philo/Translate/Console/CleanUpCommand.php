@@ -22,7 +22,25 @@ class CleanUpCommand extends Command {
 	 */
 	protected $description = 'Find and remove language strings that are not being used';
 
+	/**
+	 * The translation manager
+	 *
+	 * @var Philo\Translate\TranslateManager
+	 */
+	protected $manager;
+
+	/**
+	 * The progress helper helper set.
+	 *
+	 * @var \Symfony\Component\Console\Helper\ProgressHelper
+	 */
 	protected $progress;
+
+	/**
+	 * Array containing missing translations
+	 *
+	 * @var array
+	 */
 	protected $missing = array();
 
 	/**
@@ -75,28 +93,27 @@ class CleanUpCommand extends Command {
 
 
 	protected function processGroup($group, $lines)
-	{	
-		//	Do nothig if there is no line
+	{
+		// Do nothing if there is no line
 		if(empty($lines) || is_string($lines)) return ;
 
 		array_set($this->missing, $group, array());
-		
+
 		$this->line("Processing $group group...");
 		$this->progress->start($this->output, count($lines, COUNT_RECURSIVE));
 
-		//	Iterate over passed lines
+		// Iterate over passed lines
 		foreach ($lines as $line => $translation)
 		{
-			//	Recurse if lines are grou
-			if(is_array($translation)) {
-				$this->processGroup($group.'.'.$line, $line);
+			// Run recursive if translation is an array
+			if(is_array($translation))
+			{
+				$this->processGroup($group . '.' . $line, $line);
 			}
-
-			//	Process translation
-			else {
-				
-				if($this->manager->findLineCount($group, $line) == 0) {
-				
+			else
+			{
+				if($this->manager->findLineCount($group, $line) == 0)
+				{
 					array_push($this->missing[$group], $line);
 				}
 
@@ -105,39 +122,6 @@ class CleanUpCommand extends Command {
 		}
 
 		$this->line(" "); // Add line break to stop lines from joining
-		//var_dump($this->missing, array_get($this->missing, $group));
-		if($missing = array_get($this->missing, $group))
-		{
-			
-			foreach($missing as $m)
-			{
-				if( $this->input->getOption('silent') OR $confirm = $this->confirm("Remove $group.$m ?"))
-				{
-					$this->manager->removeLine($group, $m);
-					$this->info("Removed $m from $group");
-				}
-			}
-		}
-
-	}
-
-	protected function _processGroup($group, $lines)
-	{
-		if(empty($lines) || is_string($lines)) continue;
-		array_set($this->missing, $group, array());
-
-		$this->line("Processing $group group...");
-		$this->progress->start($this->output, count($lines));
-
-		foreach ($lines as $line => $translation)
-		{
-			if($this->manager->findLineCount($group, $line) == 0)
-					array_push($this->missing[$group], $line);
-
-			$this->progress->advance();
-		}
-
-		$this->line(" "); // Add line break to stop lines from joining
 
 		if($missing = array_get($this->missing, $group))
 		{
@@ -151,9 +135,7 @@ class CleanUpCommand extends Command {
 			}
 		}
 
-		$this->info("\nFinished processing $group group...\n");
 	}
-
 
 	/**
 	 * Get the console command arguments.
