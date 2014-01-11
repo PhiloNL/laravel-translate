@@ -22,12 +22,12 @@ So for a example:
 As you can see, you will get the blade syntax returned so you can copy and paste it to your view. Adding variables to your string will result in a different syntax:
 `php artisan translate:add profile texts.introduction`
 
-![2](https://f.cloud.github.com/assets/1133950/1894669/18130ece-7af7-11e3-86a6-86ce9bfad988.png)
+![2](https://f.cloud.github.com/assets/1133950/1894724/3bcc0cc4-7af9-11e3-9c31-5333bc75d19e.png)
 
 
 Translation files are dynamically generated in alphabetical order and equally spaced.
 
-![3](https://f.cloud.github.com/assets/1133950/1894670/1d4edcb0-7af7-11e3-90dd-9d9bb78085d7.png)
+![3](https://f.cloud.github.com/assets/1133950/1894726/416c9888-7af9-11e3-92f6-88fd2b1b9078.png)
 
 
 ### Removing translations
@@ -36,7 +36,7 @@ To remove translations you can use the remove command which has the same syntax 
 
 `php artisan translate:remove account upgrade`
 
-![4](https://f.cloud.github.com/assets/1133950/1894671/23d94a34-7af7-11e3-9e49-ae0a4f65fe2a.png)
+![4](https://f.cloud.github.com/assets/1133950/1894728/469efada-7af9-11e3-84b3-8fb5e3e648b4.png)
 
 
 ### Clean up
@@ -44,7 +44,7 @@ The clean up command will search your files for language strings which are no lo
 
 `php artisan translate:cleanup`
 
-![5](https://f.cloud.github.com/assets/1133950/1894672/291f1802-7af7-11e3-83c1-4e20595546a7.png)
+![5](https://f.cloud.github.com/assets/1133950/1894729/4bbb9b90-7af9-11e3-8571-d5fccf418c74.png)
 
 
 Foreach line that was not found, you will get a confirmation if you want to delete the line in question.
