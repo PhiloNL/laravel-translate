@@ -7,14 +7,51 @@ use App, Config, File, Lang, Carbon\Carbon;
 class TranslateManager {
 
 	protected $language;
-	protected $languages 		= array();
-	protected $loaded    		= array();
+	protected $languages         = array();
+	protected $loaded            = array();
+	protected $languagesBasePath = 'app/lang/';
+	protected $namespace;
 
 	public function __construct()
 	{
 		$this->getLanguages();
 	}
 
+	/**
+	 * Get path to languages folder
+	 * @param  string $append
+	 * @return string
+	 */
+	public function getLangPath($append = null)
+	{
+		return base_path($this->languagesBasePath . $append);
+	}
+
+	/**
+	 * Set languages folder path
+	 * @param  string $path
+	 * @return void
+	 */
+	public function setLangPath($path)
+	{
+		$this->languagesBasePath = $path;
+
+		// Reset languages
+		$this->languages = array();
+		$this->getLanguages();
+	}
+
+	/**
+	 * Prepare manager to work with workbench
+	 * @param  string $bench
+	 * @return void
+	 */
+	public function workbench($bench)
+	{
+		list($vendor, $namespace) = explode('/', $bench);
+		$this->namespace = $namespace;
+		$this->setLangPath('workbench' . DIRECTORY_SEPARATOR . $bench . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'lang' . DIRECTORY_SEPARATOR);
+	}
 
 	/**
 	 * Add language to current instance
@@ -34,7 +71,7 @@ class TranslateManager {
 	{
 		if( ! empty($this->languages) ) return $this->languages;
 
-		$directories = App::make('Finder')->directories()->in(app_path('lang'));
+		$directories = App::make('Finder')->directories()->in($this->getLangPath());
 
 		// Since we always want the default language to be processed first
 		// we add it manually so it will be ignored when looping through all languages
@@ -131,7 +168,7 @@ class TranslateManager {
 		{
 			$group = $result->getBasename('.php');
 			if(in_array($group, $ignore)) continue;
-			array_set($files, $group, Lang::get($group));
+			array_set($files, $group, $this->getGroup($group));
 		}
 
 		return $files;
@@ -162,6 +199,17 @@ class TranslateManager {
 	}
 
 	/**
+	 * Get group
+	 * @param  string $name
+	 * @return array
+	 */
+	protected function getGroup($name)
+	{
+		$name = ($this->namespace) ? $this->namespace . '::' . $name : $name;
+		return (Lang::has($name)) ? Lang::get($name) : array();
+	}
+
+	/**
 	 * Load languages in custom array.
 	 *
 	 * If you know how to override the loaded array inside the Translator class let me know!
@@ -171,7 +219,7 @@ class TranslateManager {
 	protected function loadGroup($group)
 	{
 		if($loaded = array_get($this->loaded, $this->language . "." . $group)) return $loaded;
-		$lines = (Lang::has($group)) ? Lang::get($group) : array();
+		$lines = $this->getGroup($group);
 		array_set($this->loaded, $this->language . "." . $group, $lines);
 
 		return $lines;
@@ -260,7 +308,7 @@ class TranslateManager {
 	 */
 	protected function getFilePath($group)
 	{
-		return app_path('lang' . DIRECTORY_SEPARATOR . $this->language . DIRECTORY_SEPARATOR . $group . '.php');
+		return $this->getLangPath($this->language . DIRECTORY_SEPARATOR . $group . '.php');
 	}
 
 	/**
@@ -269,7 +317,7 @@ class TranslateManager {
 	 */
 	protected function getLanguagePath()
 	{
-		return app_path('lang' . DIRECTORY_SEPARATOR . $this->language);
+		return $this->getLangPath($this->language);
 	}
 
 	/**

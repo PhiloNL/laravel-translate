@@ -55,8 +55,14 @@ class AddCommand extends Command {
 	 */
 	public function fire()
 	{
+		$bench = $this->input->getOption('bench');
 		$group = $this->input->getArgument('group');
 		$line  = $this->input->getArgument('line');
+
+		if($bench)
+		{
+			$this->manager->workbench($bench);
+		}
 
 		foreach($this->manager->getLanguages() as $language)
 		{
@@ -125,7 +131,9 @@ class AddCommand extends Command {
 	 */
 	protected function getOptions()
 	{
-		return array();
+		return array(
+			array('bench', null, InputOption::VALUE_OPTIONAL, 'Run command in workbench')
+		);
 	}
 
 }
