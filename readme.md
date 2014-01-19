@@ -1,6 +1,7 @@
 Translation manager for Laravel 4
 ===============
 <img src="https://poser.pugx.org/philo/laravel-translate/version.png">
+<img src="https://poser.pugx.org/philo/laravel-translate/downloads.png">
 
 Managing translations can be a pain, switching between different language files, adding new strings, keeping everything in sync and removing translations which are no longer being used.
 
