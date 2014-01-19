@@ -117,7 +117,7 @@ class DiggCommand extends Command {
 		foreach ($files as &$item) {
 
 			//	Set parameters [], if we have parameters on our translatios, fill it up next
-			$parameters = [];
+			$parameters = array();
 
 			//	separate parameters path from parameters
 			preg_match('/,\s*\t*(\[.*\])/i', $item, $parts);
@@ -133,15 +133,15 @@ class DiggCommand extends Command {
 				}
 			}
 
-			$_i = trim(str_replace(['\'', '"'], '', $item));
+			$_i = trim(str_replace(array('\'', '"'), '', $item));
 
-			$item = [
+			$item = array(
 				'lang_query'	=> $_i,
 				'valid'			=> (preg_match('/[^0-9a-zA-Z\._]/', $_i) == 0),
 				'group' 		=> substr($_i, 0, strpos($_i, '.')),
 				'line' 			=> substr($_i, strpos($_i, '.')+1),
 				'parameters' 	=> $parameters,
-			];
+			);
 		}
 
 		return $files;
