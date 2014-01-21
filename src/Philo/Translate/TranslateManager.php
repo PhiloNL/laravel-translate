@@ -101,10 +101,16 @@ class TranslateManager {
 	 * @param string $group
 	 * @param string $line
 	 * @param string $translation
+	 * @param boolean $htmlentities
 	 */
-	public function addLine($group, $line, $translation)
+	public function addLine($group, $line, $translation, $htmlentities)
 	{
 		$lines = $this->loadGroup($group);
+
+		if($htmlentities)
+		{
+			$translation = htmlentities($translation);
+		}
 
 		array_set($lines, $line, $translation);
 		$this->writeToFile($group, $lines);

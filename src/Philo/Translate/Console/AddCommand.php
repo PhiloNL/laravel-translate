@@ -55,9 +55,10 @@ class AddCommand extends Command {
 	 */
 	public function fire()
 	{
-		$bench = $this->input->getOption('bench');
-		$group = $this->input->getArgument('group');
-		$line  = $this->input->getArgument('line');
+		$bench        = $this->input->getOption('bench');
+		$htmlentities = !$this->input->getOption('no-entities');
+		$group        = $this->input->getArgument('group');
+		$line         = $this->input->getArgument('line');
 
 		if($bench)
 		{
@@ -68,7 +69,7 @@ class AddCommand extends Command {
 		{
 			if(is_null($translation = $this->ask("Translate '$line' in " . strtoupper($language) . ": "))) continue;
 
-			$this->manager->setLanguage($language)->addLine($group, $line, $translation);
+			$this->manager->setLanguage($language)->addLine($group, $line, $translation, $htmlentities);
 			$this->createExample($group, $line, $translation);
 		}
 
@@ -132,7 +133,8 @@ class AddCommand extends Command {
 	protected function getOptions()
 	{
 		return array(
-			array('bench', null, InputOption::VALUE_OPTIONAL, 'Run command in workbench')
+			array('bench', null, InputOption::VALUE_OPTIONAL, 'Run command in workbench'),
+			array('no-entities', null, InputOption::VALUE_NONE, 'Add translation without converting characters to entities'),
 		);
 	}
 
