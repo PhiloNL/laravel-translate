@@ -105,12 +105,8 @@ class TranslateManager {
 	 */
 	public function addLine($group, $line, $translation, $htmlentities)
 	{
-		$lines = $this->loadGroup($group);
-
-		if($htmlentities)
-		{
-			$translation = htmlentities($translation);
-		}
+		$lines       = $this->loadGroup($group);
+		$translation = ($htmlentities) ? htmlentities($translation) : $translation;
 
 		array_set($lines, $line, $translation);
 		$this->writeToFile($group, $lines);
