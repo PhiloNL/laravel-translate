@@ -12,7 +12,7 @@ Lets take a look at all the features included in this package.
 ### Adding new translations
 To add a new translation you need to open your terminal, and run the following command:
 
-`php artisan translate:add [--bench[="..."]] <group> <line>`
+`php artisan translate:add [--bench[="..."]] [--no-entities] <group> <line>`
 
 So for a example:
 `php artisan translate:add profile first_name`
