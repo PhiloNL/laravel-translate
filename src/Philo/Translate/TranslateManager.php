@@ -103,7 +103,7 @@ class TranslateManager {
 	 * @param string $translation
 	 * @param boolean $htmlentities
 	 */
-	public function addLine($group, $line, $translation, $htmlentities)
+	public function addLine($group, $line, $translation, $htmlentities=true)
 	{
 		$lines       = $this->loadGroup($group);
 		$translation = ($htmlentities) ? htmlentities($translation) : $translation;
