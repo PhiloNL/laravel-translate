@@ -5,8 +5,9 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
 
 use Philo\Translate\TranslateManager;
+use File, Lang;
 
-class diggCommand extends Command {
+class DiggCommand extends Command {
 
 	/**
 	 * The console command name.
@@ -20,9 +21,27 @@ class diggCommand extends Command {
 	 *
 	 * @var string
 	 */
-	protected $description = 'Try to digg all missing translation from application';
+	protected $description = 'Try to digg all missing translation from application [BETA]';
 
+	/**
+	 * The translation manager
+	 *
+	 * @var Philo\Translate\TranslateManager
+	 */
+	protected $manager;
+
+	/**
+	 * The progress helper helper set.
+	 *
+	 * @var \Symfony\Component\Console\Helper\ProgressHelper
+	 */
 	protected $progress;
+
+	/**
+	 * Array containing missing translations
+	 *
+	 * @var array
+	 */
 	protected $missing = array();
 
 	/**
@@ -43,15 +62,16 @@ class diggCommand extends Command {
 	 */
 	public function fire()
 	{
-		$this->info('It\'s time to DIGG for some translations!');
+		$this->info("It's time to DIGG for some translations!");
 		$this->info(' ');
 		foreach ($this->manager->getDiggFiles() as $file) {
-			
-			$this->comment("Digging translations for '".str_replace(base_path().'/', '', $file)."'");
+
+			$path = str_replace(base_path().'/', '', $file);
+			$this->comment("Digging translations for $path");
 
 			foreach ($this->getTranlations($file) as $translate) {
-				
-				if(!$translate['valid'] and !$this->confirm('Translation "'.$translate['lang_query'].'" seems wrong. Want to try to translate it anyway? [yes|no]')) {
+
+				if( ! $translate['valid'] and ! $this->confirm('Translation "' . $translate['lang_query'] . '" seems wrong. Want to try to translate it anyway? [yes|no]')) {
 					continue;
 				}
 
@@ -64,7 +84,6 @@ class diggCommand extends Command {
 						$this->manager->setLanguage($language)->addLine($translate['group'], $translate['line'], $translation, true);
 					}
 				}
-
 			}
 		}
 	}
@@ -73,13 +92,13 @@ class diggCommand extends Command {
 	 * Parse all translations from files
 	 *
 	 * @return array
-	 * @author 
+	 * @author
 	 **/
 	public function getTranlations($file)
 	{
-		$data = \File::get($file);
+		$data = File::get($file);
 
-		
+
 		//	Try to pick up all Lang funktions from file
 		preg_match_all('/Lang::get\s*\([^;]*\)\s*;/iU', $data, $matches, PREG_PATTERN_ORDER);
 		
@@ -87,10 +106,10 @@ class diggCommand extends Command {
 		if(empty($matches[0])) {
 			return array();
 		}
-			
+
 		//	return unique translations
 		$files = array_unique($matches[0]);
-		
+
 		//	array containing all lang queries
 		$lang_queries = [];
 
@@ -104,7 +123,7 @@ class diggCommand extends Command {
 					if(self::getTokenValue($token, $key, T_STRING) === 'Lang') {
 						if(self::getTokenValue($token, $key+1, T_DOUBLE_COLON)!==false and self::getTokenValue($token, $key+2, T_STRING) === 'get' and self::getTokenValue($token, $key+4)!==false) {
 							$_i = substr(self::getTokenValue($token, $key+4), 1, -1);
-							
+
 							$lang_queries[] = [
 								'lang_query'	=> $_i,
 								'valid'			=> true,
@@ -112,17 +131,17 @@ class diggCommand extends Command {
 								'line' 			=> substr($_i, strpos($_i, '.')+1),
 								'parameters' 	=> (self::getTokenValue($token, ($key+5)) == ','),
 							];
-						
+
 						}
 					}
 				}
-				
+
 			}
-			
-		}
+
+				}
 		
 		return $lang_queries;
-	}
+			}
 
 	/**
 	 * Get the console command arguments.
@@ -136,10 +155,10 @@ class diggCommand extends Command {
 		if(!is_array($tokens[$key])) {
 			if($token > 0) {
 				return false;
-			}
+		}
 
 			return $tokens[$key];
-		}
+	}
 
 		if($token>0) {
 			return ($tokens[$key][0] == $token ? $tokens[$key][1] : false);
