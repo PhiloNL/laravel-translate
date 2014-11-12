@@ -62,7 +62,7 @@ class DiggCommand extends Command {
 	 */
 	public function fire()
 	{
-        $htmlentities = !$this->input->getOption('no-entities');
+		$htmlentities = !$this->input->getOption('no-entities');
 		$this->info("It's time to DIGG for some translations!");
 		$this->info(' ');
 		foreach ($this->manager->getDiggFiles() as $file) {
@@ -166,8 +166,8 @@ class DiggCommand extends Command {
 	protected function getOptions()
 	{
 		return array(
-            array('no-entities', null, InputOption::VALUE_NONE, 'Add translation without converting characters to entities'),
-        );
+			array('no-entities', null, InputOption::VALUE_NONE, 'Add translation without converting characters to entities'),
+		);
 	}
 
 }
