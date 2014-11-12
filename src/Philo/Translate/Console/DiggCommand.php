@@ -62,6 +62,7 @@ class DiggCommand extends Command {
 	 */
 	public function fire()
 	{
+		$htmlentities = !$this->input->getOption('no-entities');
 		$this->info("It's time to DIGG for some translations!");
 		$this->info(' ');
 		foreach ($this->manager->getDiggFiles() as $file) {
@@ -85,7 +86,7 @@ class DiggCommand extends Command {
 					if(Lang::get($lang_query, $parameters) == $lang_query)
 					{
 						if(is_null($translation = $this->ask("Translate '$lang_query'" . ( ! empty($parameters) ? " [" . implode(',', $parameters) . "]" : null) . " in " . strtoupper($language) . ": "))) continue;
-						$this->manager->setLanguage($language)->addLine($group, $line, $translation);
+						$this->manager->setLanguage($language)->addLine($group, $line, $translation, $htmlentities);
 					}
 				}
 			}
@@ -164,7 +165,9 @@ class DiggCommand extends Command {
 	 */
 	protected function getOptions()
 	{
-		return array();
+		return array(
+			array('no-entities', null, InputOption::VALUE_NONE, 'Add translation without converting characters to entities'),
+		);
 	}
 
 }
