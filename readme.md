@@ -1,4 +1,4 @@
-Translation manager for Laravel 4
+Translation manager for Laravel 5
 ===============
 <img src="https://poser.pugx.org/philo/laravel-translate/version.png"> <img src="https://poser.pugx.org/philo/laravel-translate/downloads.png">
 
@@ -62,8 +62,8 @@ The package can be installed via Composer by requiring the "philo/laravel-transl
 ```
 {
     "require": {
-        "laravel/framework": "4.1.*",
-        "philo/laravel-translate": "dev-master"
+        "laravel/framework": "5.*",
+        "philo/laravel-translate": "~5.0"
     },
     "minimum-stability": "dev"
 }
@@ -73,7 +73,9 @@ Next you need to add the service provider to app/config/app.php
 
 ```
 'providers' => array(
-    // ...
+    /*
+     * Application Service Providers...
+     */
     'Philo\Translate\TranslateServiceProvider',
 )
 ```
@@ -81,7 +83,7 @@ Next you need to add the service provider to app/config/app.php
 ## Config
 
 You can publish the config file in case you want to make some adjustments to the clean up command:
-`php artisan config:publish --path=philo/translate philo/translate`
+`php artisan vendor:publish
 
 ```
 <?php
