@@ -83,7 +83,7 @@ Next you need to add the service provider to app/config/app.php
 ## Config
 
 You can publish the config file in case you want to make some adjustments to the clean up command:
-`php artisan vendor:publish
+`php artisan vendor:publish`
 
 ```
 <?php
