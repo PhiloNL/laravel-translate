@@ -22,6 +22,10 @@ class TranslateServiceProvider extends ServiceProvider {
 			__DIR__.'/config.php' => config_path('translate.php'),
 		]);
 
+		$this->mergeConfigFrom(
+			__DIR__.'/config.php', 'translate'
+		);
+
 		$this->app->bind('Finder', function($app)
 		{
 			return new \Symfony\Component\Finder\Finder();
