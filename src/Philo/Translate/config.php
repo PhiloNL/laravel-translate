@@ -1,7 +1,7 @@
 <?php
 
 return array(
-	'search_ignore_folders' => array('commands', 'config', 'database', 'lang', 'start', 'storage', 'tests'),
-	'search_exclude_files'  => array('pagination', 'reminders', 'validation'),
+	'search_ignore_folders' => array('bootstrap', 'config', 'database', 'public', 'storage', 'tests', 'vendor'),
+	'search_exclude_files'  => array('pagination', 'passwords', 'validation'),
 	'digg_folders'          => array('app/models', 'app/views', 'app/controllers'),
 );

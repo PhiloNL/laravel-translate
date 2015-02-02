@@ -153,7 +153,7 @@ class TranslateManager {
 	 */
 	public function findLineCount($group, $line)
 	{
-		return App::make('Finder')->files()->name('*.php')->in(app_path())->exclude($this->getIgnoredFolders())->contains("$group.$line")->count();
+		return App::make('Finder')->files()->name('*.php')->in(base_path())->exclude($this->getIgnoredFolders())->contains("$group.$line")->count();
 	}
 
 	/**
@@ -328,7 +328,7 @@ class TranslateManager {
 	 */
 	protected function getIgnoredFiles()
 	{
-		return Config::get('translate::search_exclude_files');
+		return Config::get('translate.search_exclude_files');
 	}
 
 	/**
@@ -337,7 +337,7 @@ class TranslateManager {
 	 */
 	protected function getIgnoredFolders()
 	{
-		return Config::get('translate::search_ignore_folders');
+		return Config::get('translate.search_ignore_folders');
 	}
 
 	/**
@@ -346,7 +346,7 @@ class TranslateManager {
 	 */
 	protected function getDiggFolders()
 	{
-		return Config::get('translate::digg_folders');
+		return Config::get('translate.digg_folders');
 	}
 
 }
