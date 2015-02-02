@@ -9,7 +9,7 @@ class TranslateManager {
 	protected $language;
 	protected $languages         = array();
 	protected $loaded            = array();
-	protected $languagesBasePath = 'app/lang/';
+	protected $languagesBasePath = 'resources/lang/';
 	protected $namespace;
 
 	public function __construct()

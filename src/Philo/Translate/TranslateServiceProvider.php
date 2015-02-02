@@ -18,7 +18,9 @@ class TranslateServiceProvider extends ServiceProvider {
 	 */
 	public function boot()
 	{
-		$this->package('philo/translate');
+		$this->publishes([
+			__DIR__.'/config.php' => config_path('translate.php'),
+		]);
 
 		$this->app->bind('Finder', function($app)
 		{
