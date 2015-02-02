@@ -1,6 +1,6 @@
 {
     "name": "philo/laravel-translate",
-    "description": "Translation manager for Laravel 4",
+    "description": "Translation manager for Laravel 5",
     "keywords": ["laravel", "translate", "translation", "manager"],
     "license": "MIT",
     "authors": [
@@ -11,7 +11,7 @@
     ],
     "require": {
         "php": ">=5.3.0",
-        "illuminate/support": "4.*"
+        "illuminate/support": "5.*"
     },
     "autoload": {
         "psr-0": {
