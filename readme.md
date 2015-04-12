@@ -57,13 +57,13 @@ By default the clean up command will look through all your language files. In ca
 `php artisan translate:cleanup --group="account"`
 
 ## Installation
-The package can be installed via Composer by requiring the "philo/laravel-translate": "dev-master" package in your project's composer.json.
+The package can be installed via Composer by requiring the "philo/laravel-translate": "~2.0" package in your project's composer.json.
 
 ```
 {
     "require": {
         "laravel/framework": "5.*",
-        "philo/laravel-translate": "~5.0"
+        "philo/laravel-translate": "~2.0"
     },
     "minimum-stability": "dev"
 }
