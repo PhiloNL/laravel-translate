@@ -243,8 +243,7 @@ class TranslateManager {
 			$item = addslashes($item);
 		});
 
-		$date    = Carbon::now()->format('d-m-Y H:i');
-		$string = "<?php\n\n# modified at $date\n\nreturn ".$this->prettyPrintArray($lines)."\n";
+		$string = "<?php\n\nreturn ".$this->prettyPrintArray($lines)."\n";
 
 		return File::put($this->getFilePath($group), $string );
 	}
