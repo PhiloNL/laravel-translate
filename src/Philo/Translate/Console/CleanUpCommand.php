@@ -3,6 +3,7 @@
 use Illuminate\Console\Command;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
+use Symfony\Component\Console\Helper\ProgressBar;
 
 use Philo\Translate\TranslateManager;
 
@@ -61,14 +62,14 @@ class CleanUpCommand extends Command {
 	 */
 	public function fire()
 	{
-		$this->progress = $this->getHelperSet()->get('progress');
-
 		$this->info("Looking for missing translations...\n");
 
 		if(is_null($files = $this->manager->getLanguageFiles()))
 		{
 			return $this->error('No translation files where found.');
 		}
+
+		$this->progress = new ProgressBar($this->output, count($files));
 
 		if($group = $this->input->getOption('group'))
 		{
@@ -99,7 +100,7 @@ class CleanUpCommand extends Command {
 		array_set($this->missing, $group, array());
 
 		$this->line("Processing $group group...");
-		$this->progress->start($this->output, count($lines, COUNT_RECURSIVE));
+		$this->progress->start();
 
 		// Iterate over passed lines
 		foreach ($lines as $line => $translation)
